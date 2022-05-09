@@ -47,7 +47,7 @@ class Mywindow:
 window = Tk()
 mywin = Mywindow(window)
 window.geometry("380x420+20+50")
-window.title("Semestral Grade Calculator")
+window.title("Calculator")
 
 
 window.mainloop()
