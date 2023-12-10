@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>inBetween</title>
+
+<style>
+.tbl tr td{
+	height: 230px;
+	background-color:#FFFFFF;
+}
+
+.column1{
+	width:500px;
+	
+}
+
+.column2{
+	width:200px;
+}
+
+.lbl{
+	padding:5px;
+	border:1px solid #000;
+	background-color:#FF0;
+	text-align:center;
+	font-weight:bold;
+}
+
+#potmoney, #credits{
+	font-size:50px;
+	text-align:center;
+	padding:10px;
+}
+
+#txtbet{
+	width:80px;
+	font-size:24px;
+}
+
+.btn{
+	background-color:#030;
+	border:#033;
+	color:#FFF;
+	padding:5px 10px;
+	font-size:20px;
+	cursor:pointer;
+}
+
+.btn:hover{
+	background-color:#063;
+	border:#033;
+	color:#FFF;
+	padding:5px 10px;
+	font-size:20px;
+}
+
+.cards{
+	height:200px;
+}
+
+.cardscont{
+	text-align:center;
+	padding:10px;
+}
+body{
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 5px;
+  height: 450px; 
+}
+</style>
+
+<script src="jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	
+	var card1 = 0;
+	var card2 = 0;
+	var card3 = 0;
+	var potmoney = 0;
+	
+	function randomizePotMoney(){
+		potmoney = Math.floor(Math.random() * 15)+5;
+		$("#potmoney").html(potmoney);
+	}
+	
+	DrawCards();
+	
+	function DrawCards(){ //draw card1 and card2
+		card1 = Math.floor(Math.random() * 13)+1;
+		card2 = Math.floor(Math.random() * 13)+1;
+		var suit = Math.floor(Math.random() * 4)+1;
+		
+		switch(suit){
+			case 1: suit = "C"; break; //Clubs
+			case 2: suit = "S"; break; //Spades
+			case 3: suit = "H"; break; //Hearts
+			case 4: suit = "D"; break; //Diamonds
+		}
+		
+		$("#c1").attr("src","cards/" + suit + card1 + ".png").hide().slideDown();
+		
+		var suit = Math.floor(Math.random() * 4)+1;
+		
+		switch(suit){
+			case 1: suit = "C"; break; //Clubs
+			case 2: suit = "S"; break; //Spades
+			case 3: suit = "H"; break; //Hearts
+			case 4: suit = "D"; break; //Diamonds
+		}
+		
+		$("#c2").attr("src","cards/" + suit + card2 + ".png").hide().slideDown();
+	}
+	
+	
+	function DrawCardNo3(){ //draw card3
+		card3 = Math.floor(Math.random() * 13)+1;
+		var suit = Math.floor(Math.random() * 4)+1;
+		
+		switch(suit){
+			case 1: suit = "C"; break; //Clubs
+			case 2: suit = "S"; break; //Spades
+			case 3: suit = "H"; break; //Hearts
+			case 4: suit = "D"; break; //Diamonds
+		}
+		
+		$("#c3").attr("src","cards/" + suit + card3 + ".png").hide().slideDown();
+	}
+	
+	
+	function newGame(){
+		randomizePotMoney();
+		credits = 50;
+		$("#credits").html(credits)
+		DrawCards();
+		$("#c3").attr("src","cards/card_back.jpg");
+	}
+
+	function continueGame(){
+		randomizePotMoney();
+		$("#credits").html(credits)
+		DrawCards();
+		$("#c3").attr("src","cards/card_back.jpg");
+	}
+	
+	newGame();
+	
+
+	$("#btnnewgame").click(function(){
+		newGame();
+	});
+	
+	$("#btnbet").click(function(){
+		var BetAmount = $("#txtbet").val();
+		var bet = parseInt(BetAmount, 10);
+		
+		//PLACE YOUR CODES HERE 
+		//Check the 3rd card if between card1 and card2
+		
+		function cardCheck(card1, card2, card3) {
+  			return card3 > Math.min(card1, card2) && card3 < Math.max(card1, card2);
+		}
+		if (bet<0){
+			alert("You cannot bet a negative number");
+		}
+		else if((credits<=0)||(bet>credits)){
+			alert("You do not have enough credits");
+		}
+		else if((bet<=potmoney)&&(bet<=credits)){
+		DrawCardNo3();
+
+		if (cardCheck(card1, card2, card3)) {
+			credits = credits + bet;
+				$("#credits").html(credits);
+				setTimeout(function() {
+				continueGame()}, 2000);
+		} else {
+			credits = credits - bet;
+			$("#credits").html(credits);
+				setTimeout(function() {
+				continueGame()}, 2000);
+					}}
+						else{
+						alert("Max bet is " + potmoney + " try a smaller bet");
+					}
+	});
+	
+	$("#btnfold").click(function(){
+
+		if (credits>=5){
+			credits = credits - 5;
+			$("#credits").html(credits);
+				DrawCardNo3();
+			$("#credits").html(credits);
+				setTimeout(function() {
+					continueGame()}, 2000);} 
+		else if(credits<5){
+			alert("You do not have enough credits");
+		}
+	});
+
+});
+</script>
+</head>
+
+<body background="BG.jpg">
+<center>
+<table border="1" class="tbl">
+	<tr>
+    	<td class="column1">
+        	<div class="cardscont">
+            	<img src="cards/card_back.jpg" class="cards" id="c3" />
+            </div>
+        </td>
+        <td class="column2" valign="top">
+        	<div class="lbl">Pot Money</div>
+            <div id="potmoney">0</div>
+        </td>
+    </tr>
+    <tr>
+    	<td>
+        	<div class="cardscont">
+            	<img src="cards/card_back.jpg" class="cards" id="c1" />
+                <img src="cards/card_back.jpg" class="cards" id="c2" />
+            </div>
+        </td>
+        <td valign="top">
+        	<div class="lbl">Credits</div>
+            <div id="credits">50</div>
+            <div style="text-align:center;">
+            	Bet: <input type="number" id="txtbet" value="10" min="1" /><br /><br />
+                <input type="button" id="btnbet" value="Bet" class="btn" />
+				<input type="button" id="btnfold" value="Fold" class="btn" />
+            </div>
+        </td>
+    </tr>
+</table>
+</center>
+<center><br />	
+	<button id="btnnewgame">New Game</button>
+</center>
+</body>
+</html>
